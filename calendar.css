@@ -1,0 +1,134 @@
+/**
+
+    CSS Styles for Calendar component. This CSS file uses default class names for component.
+
+    ******************** Feel free to edit this file or create your own ********************
+    
+ */
+
+.sa-calendar * {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+.sa-calendar {
+    width: 21em;
+    font-size: 14px;
+    font-family: sans-serif;
+    text-align: center;
+    margin: 10px;
+}
+.sa-cal-wrapper {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid #18b9a4;
+    box-sizing: content-box;
+    width: 100%;
+}
+.sa-cal-controls {
+    padding: 0.5em;
+    background-color: #18b9a4;
+    color: #fff;
+}
+.sa-cal-change {
+    font-size: 1.3em;
+    text-decoration: none;
+    color: #fff;
+    line-height: 1.5em;
+    height: 1.5em;
+    width: 1.5em;
+}
+.sa-cal-change:hover {
+    background-color: #fff;
+    color: #18b9a4;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+}
+.sa-cal-prev-month {
+    float: left;
+}
+.sa-cal-next-month {
+    float: right;
+}
+.sa-cal-current {
+    font-size: 1.3em;
+    line-height: 1.5em;
+    height: 1.5em;
+}
+.sa-cal-content ul {
+    list-style-type: none;
+}
+.sa-cal-cell {
+    float: left;
+    width: 2em;
+    height: 2em;
+    line-height: 2em;
+    padding: 0.5em;
+}
+.sa-cal-day {
+    background-color: #797979;
+    color: #fff;
+}
+.sa-cal-day-no {
+    display: block;
+    text-decoration: none;
+    color: #797979;
+}
+.sa-cal-day-no:hover, .sa-cal-day-no.selected {
+    background-color: #18b9a4;
+    color: #fff;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+}
+
+
+/** INPUT + EFFECT **/
+.sa-cal-input-wrapper {
+    margin-bottom: 1em;
+}
+.sa-cal-field {
+    line-height: 2em;
+    width: 90%;
+    color: #797979;
+    font-size: 1em;
+    outline: none;
+    text-align: center;
+}
+
+.sa-cal-effect-line {
+    margin: 0 auto;
+    position: relative;
+    width: 90%;
+    border-bottom: 2px solid #c8c8c8;
+}
+.sa-cal-effect-line:after {
+    position: absolute;
+    display: block;
+    left: 50%;
+    content: '';
+    height: 3px;
+    background: #18b9a4;
+    -webkit-transition: all 0.3s ease-in;
+    -moz-transition: all 0.3s ease-in;
+    -ms-transition: all 0.3s ease-in;
+    -o-transition: all 0.3s ease-in;
+    transition: all 0.3s ease-in;
+    width: 0;
+    bottom: -2px;
+}
+.sa-cal-field:focus ~ .sa-cal-effect-line:after, .sa-cal-effect-line.toggled:after {
+    width: 100%;
+    left: 0;
+}
+/********************************/
+
+
+.sa-cal-field::-ms-clear {
+    display: none;
+}
+.sa-clr {
+    clear: both;
+}
