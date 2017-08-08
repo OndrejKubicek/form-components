@@ -1,5 +1,9 @@
 var Calendar = (function() {
 
+    /**
+     * Available locales to translate Calendar component. Locale used is specified via _options.
+     * @private
+     */
     const _locales = {
         'cs-CZ': {
             months: [ 'Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec', 'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec' ],
@@ -13,6 +17,12 @@ var Calendar = (function() {
 
     var _date = new Date();
 
+    /**
+     * Settings used to render a make Calendar work.
+     * Controls field is used class names of Calendar component.
+     * You can override these settings via init() function.
+     * @private
+     */
     var _options = {
         controls: {
             calendar_root: 'sa-calendar',
@@ -58,7 +68,15 @@ var Calendar = (function() {
         }
     };
 
-    var init = function (options) {
+
+    /**
+     * Initializes Calendar component.
+     * To create component via this module, specify renderingElement parameter. Inside specified
+     * element, the Calendar component will be rendered.
+     * @param options (JSONArray) - to override module options (eg. controls classes, locale, ...)
+     * @param renderingElement (element) - target element to render component
+     */
+    var init = function (options, renderingElement) {
         if (typeof Object.assign != 'function') {
             // Must be writable: true, enumerable: false, configurable: true
             Object.defineProperty(Object, "assign", {
@@ -90,6 +108,7 @@ var Calendar = (function() {
         }
         _options = Object.assign({}, _options, options);
 
+        if (typeof renderingElement !== 'undefined') createComponent(renderingElement);
 
         var prev_btn = document.querySelector('.' + _options.controls.prev);
         var next_btn = document.querySelector('.' + _options.controls.next);
@@ -111,6 +130,10 @@ var Calendar = (function() {
         countPositions();
     };
 
+    /**
+     * Handles previous month button click.
+     * @param e (event) - mouse event
+     */
     var prevMonth = function(e) {
         e.preventDefault();
 
@@ -127,6 +150,10 @@ var Calendar = (function() {
         countPositions();
     };
 
+    /**
+     * Handles next month button click.
+     * @param e (event) - mouse event
+     */
     var nextMonth = function(e) {
         e.preventDefault();
 
@@ -143,6 +170,10 @@ var Calendar = (function() {
         countPositions();
     };
 
+    /**
+     * Handles date selection. If input effect is set, it will be triggered for 1 second after click.
+     * @param e (event) - mouse event
+     */
     var selectDate = function(e) {
         e.preventDefault();
 
@@ -157,6 +188,10 @@ var Calendar = (function() {
         setSelected(this.getAttribute('data-date'));
     };
 
+    /**
+     * Handles input Enter hit.
+     * @param e (event) - keyboard event
+     */
     var handleKeyUp = function (e) {
         if (e.keyCode === 13) {
             this.blur();
@@ -164,6 +199,10 @@ var Calendar = (function() {
         }
     };
 
+    /**
+     * Performs Calendar re-rendering. (used for example when using text input to
+     * select date).
+     */
     var reRender = function () {
         var parsed_input = _input_field.value.match(/[0-9]+/g);
 
@@ -186,6 +225,10 @@ var Calendar = (function() {
         }
     };
 
+    /**
+     * Sets clicked date selected - highlight it and inserts date value to text input.
+     * @param clicked_date (string) - day number that was clicked
+     */
     var setSelected = function (clicked_date) {
         clicked_date = parseInt(clicked_date);
         clearClass(_items[_selected_date.day - 1], 'selected');
@@ -194,17 +237,29 @@ var Calendar = (function() {
         _input_field.value = _selected_date.toString();
     };
 
+    /**
+     * Handles hiding selected day when switching months.
+     */
     var handleSwitchMonth = function() {
         if (!datesCompare()) {
             clearClass(_items[_selected_date.day - 1], 'selected');
         } else _items[_selected_date.day - 1].className += ' selected';
     };
 
+    /**
+     * Compares two dates according to value of only month and year.
+     * @returns {boolean} True if dates are same, otherwise false
+     */
     var datesCompare = function() {
         if (_selected_date.month !== _options.month) return false;
         return _selected_date.year === _options.year;
     };
 
+    /**
+     * Counts how many days displayed month have. According to number of days
+     * it creates margin of first day to correspond with valid day name.
+     * Also hides/reveals last cells based on day count of displayed month.
+     */
     var countPositions = function() {
         _date.setFullYear(_options.year, _options.month + 1, 0);
         _day_count = _date.getDate();
@@ -239,6 +294,11 @@ var Calendar = (function() {
             _items[i].style.display = display
     };
 
+    /**
+     * Constructs month name according to locale set in options.
+     * @param include_year (boolean) - specifies if month should include corresponding year
+     * @returns {string} String according to actual locale
+     */
     var getString = function (include_year) {
         if (include_year) {
             return _locales[_options.locale].months[_options.month] + ' ' + _options.year;
@@ -247,14 +307,28 @@ var Calendar = (function() {
         }
     };
 
+    /**
+     * Gets date that is currently selected and highlighted in Calendar.
+     * @returns {string} Formatted string of selected date
+     */
     var getSelectedDate = function() {
         return _selected_date.toString();
     };
 
+    /**
+     * Sets Calendar heading to actual month with year. (eg. July 2017)
+     */
     var setHeading = function() {
         _heading.innerText = getString(true);
     };
 
+    /**
+     * Checks if value passed to text input is valid date.
+     * @param date (string) - date to be checked
+     * @param input_day_value (string) - day of date that was entered (this is used to fix behavior when e.g. 30/2/2017
+     * leads to overlapping into next month)
+     * @returns {boolean} True if date is valid, otherwise false
+     */
     var checkInput = function (date, input_day_value) {
         var temp = new Date(date);
         temp.setMonth(date.getMonth()+1, 0);
@@ -263,6 +337,11 @@ var Calendar = (function() {
         return temp.getDate() >= date.getDate();
     };
 
+    /**
+     * Clears given class from element.
+     * @param element (element) - element to remove class from
+     * @param class_name (string) - class name to be removed
+     */
     var clearClass = function(element, class_name) {
         var str = '(?:^|\\s)' + class_name + '(?!\\S)';
         var pattern = new RegExp(str);
@@ -270,6 +349,10 @@ var Calendar = (function() {
         element.className = element.className.replace(pattern , '');
     };
 
+    /**
+     * Creates component.
+     * @param elem (element) - element used as wrapper for component
+     */
     var createComponent = function (elem) {
         var calendar = document.createElement('div'),
             input_wrapper = document.createElement('div'),
@@ -354,8 +437,7 @@ var Calendar = (function() {
 
     return {
         init: init,
-        getDate: getSelectedDate,
-        createComponent: createComponent
+        getDate: getSelectedDate
     };
 
 })();
